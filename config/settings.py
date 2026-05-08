@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Segurança
 SECRET_KEY = 'django-insecure-trocar-depois'
 
-# No Vercel, o ideal é False para o WhiteNoise assumir o controle dos estáticos
+# No Vercel, DEBUG deve ser False para o WhiteNoise funcionar corretamente
 DEBUG = False 
 
 ALLOWED_HOSTS = ['*']
@@ -99,15 +99,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Pasta onde seus arquivos originais estão (CSS, JS, IMG)
+# Onde os arquivos originais estão
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-# Pasta onde o Django vai reunir tudo para produção
+# Onde o Django vai reunir tudo para produção
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Configuração WhiteNoise estável para o Vercel
+# Configuração WhiteNoise estável
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 WHITENOISE_USE_MANIFEST_STORAGE = False
 
@@ -131,7 +131,6 @@ REST_FRAMEWORK = {
 
 # ==========================================================
 # PLANO B: COLECTSTATIC AUTOMÁTICO NO VERCEL
-# Isso força a criação dos arquivos mesmo se o build falhar
 # ==========================================================
 if os.environ.get('VERCEL'):
     try:
