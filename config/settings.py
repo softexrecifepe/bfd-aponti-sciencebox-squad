@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Segurança
 SECRET_KEY = 'django-insecure-trocar-depois'
 
-# Deixe True por enquanto para debug, mas o WhiteNoise cuidará do resto
+# Deixe True para debug, mas mude para False quando tudo estiver ok
 DEBUG = True 
 
 ALLOWED_HOSTS = ['*']
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # WhiteNoise aqui é vital!
+    'whitenoise.middleware.WhiteNoiseMiddleware', # WhiteNoise deve estar aqui!
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -98,17 +98,17 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Onde seus arquivos originais estão
+# Pasta onde seus arquivos originais estão
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-# Onde o Django vai reunir tudo
+# Pasta onde o Django vai reunir tudo
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# WhiteNoise Storage
+# WhiteNoise Storage - Simplificado para evitar erros de Manifest no Vercel
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-WHITENOISE_USE_MANIFEST_STORAGE = True
+WHITENOISE_USE_MANIFEST_STORAGE = False # Mude para False se os nomes com hash derem erro
 
 # =========================
 # MEDIA
@@ -126,11 +126,11 @@ REST_FRAMEWORK = {
 
 # ==========================================================
 # PLANO B: FORÇAR COLLECTSTATIC NO VERCEL
-# Se o build_files.sh falhar, o Django faz o trabalho sozinho
 # ==========================================================
 if os.environ.get('VERCEL'):
     try:
         print("Ambiente Vercel detectado. Rodando collectstatic...")
-        subprocess.run(['python3', 'manage.py', 'collectstatic', '--noinput'])
+        # No Vercel, o comando costuma ser 'python' e não 'python3'
+        subprocess.run(['python', 'manage.py', 'collectstatic', '--noinput'])
     except Exception as e:
         print(f"Erro no collectstatic: {e}")
