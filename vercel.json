@@ -1,7 +1,8 @@
 {
+  "version": 2,
   "builds": [
     {
-      "src": "manage.py",
+      "src": "config/wsgi.py",
       "use": "@vercel/python"
     }
   ],
