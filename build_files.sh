@@ -1,4 +1,7 @@
-echo " BUILD START "
-python3.12 -m pip install -r requirements.txt
+# Instala as dependências
+pip install -r requirements.txt
+
+# Garante que o WhiteNoise e o Django consigam criar os arquivos
 python3.12 manage.py collectstatic --noinput --clear
-echo " BUILD END "
+
+echo "BUILD FINALIZADO COM SUCESSO"
