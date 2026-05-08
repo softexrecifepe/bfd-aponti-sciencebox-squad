@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import subprocess
 
 # Caminho base
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -7,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Segurança
 SECRET_KEY = 'django-insecure-trocar-depois'
 
-# Em produção no Vercel, mude para False para o WhiteNoise funcionar 100%
+# No Vercel, o ideal é False para o WhiteNoise assumir o controle dos estáticos
 DEBUG = False 
 
 ALLOWED_HOSTS = ['*']
@@ -39,7 +40,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    # WhiteNoise deve estar aqui!
+    # WhiteNoise deve vir obrigatoriamente após o SecurityMiddleware
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -84,7 +85,7 @@ DATABASES = {
 }
 
 # =========================
-# INTERNACIONALIZAÇÃO
+# LOCALIZAÇÃO
 # =========================
 
 LANGUAGE_CODE = 'pt-br'
@@ -92,32 +93,34 @@ TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
 USE_TZ = True
 
-# =========================
-# STATIC FILES (A JUSTIÇA FINAL)
-# =========================
+# ==========================================================
+# STATIC FILES (A CONFIGURAÇÃO QUE MATA O ERRO DE MIME TYPE)
+# ==========================================================
 
 STATIC_URL = '/static/'
 
-# Pasta onde seus arquivos originais estão
+# Pasta onde seus arquivos originais estão (CSS, JS, IMG)
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-
-STATIC_URL = '/static/'
+# Pasta onde o Django vai reunir tudo para produção
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-# MUDANÇA AQUI: Desative o Manifest temporariamente para o Vercel não se perder com os nomes dos arquivos
+# Configuração WhiteNoise estável para o Vercel
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 WHITENOISE_USE_MANIFEST_STORAGE = False
 
 # =========================
-# MEDIA
+# MEDIA FILES
 # =========================
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# =========================
+# DIVERSOS
+# =========================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True
@@ -125,3 +128,14 @@ CORS_ALLOW_ALL_ORIGINS = True
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny']
 }
+
+# ==========================================================
+# PLANO B: COLECTSTATIC AUTOMÁTICO NO VERCEL
+# Isso força a criação dos arquivos mesmo se o build falhar
+# ==========================================================
+if os.environ.get('VERCEL'):
+    try:
+        print("Ambiente Vercel detectado. Rodando collectstatic...")
+        subprocess.run(['python', 'manage.py', 'collectstatic', '--noinput'])
+    except Exception as e:
+        print(f"Erro no collectstatic automático: {e}")
