@@ -10,6 +10,10 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
+# =========================
+# APPS
+# =========================
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -27,9 +31,15 @@ INSTALLED_APPS = [
 ]
 
 
+# =========================
+# MIDDLEWARE
+# =========================
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
+
     'whitenoise.middleware.WhiteNoiseMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -41,14 +51,27 @@ MIDDLEWARE = [
 ]
 
 
+# =========================
+# URLS
+# =========================
+
 ROOT_URLCONF = 'config.urls'
 
+
+# =========================
+# TEMPLATES
+# =========================
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'apps/core/templates'],
+
+        'DIRS': [
+            BASE_DIR / 'apps/core/templates'
+        ],
+
         'APP_DIRS': True,
+
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
@@ -60,8 +83,16 @@ TEMPLATES = [
 ]
 
 
+# =========================
+# WSGI
+# =========================
+
 WSGI_APPLICATION = 'config.wsgi.application'
 
+
+# =========================
+# DATABASE
+# =========================
 
 DATABASES = {
     'default': {
@@ -71,8 +102,16 @@ DATABASES = {
 }
 
 
+# =========================
+# PASSWORD VALIDATION
+# =========================
+
 AUTH_PASSWORD_VALIDATORS = []
 
+
+# =========================
+# LANGUAGE
+# =========================
 
 LANGUAGE_CODE = 'pt-br'
 
@@ -83,27 +122,47 @@ USE_I18N = True
 USE_TZ = True
 
 
+# =========================
+# STATIC FILES
+# =========================
+
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+
+# =========================
+# MEDIA FILES
+# =========================
 
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
+# =========================
+# DEFAULT FIELD
+# =========================
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# =========================
+# CORS
+# =========================
+
 CORS_ALLOW_ALL_ORIGINS = True
 
+
+# =========================
+# DRF
+# =========================
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
