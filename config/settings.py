@@ -169,3 +169,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ]
 }
+
+WHITENOISE_USE_MANIFEST_STORAGE = True
